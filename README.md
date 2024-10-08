@@ -10,7 +10,7 @@ Introducing FARTS the Fast Automated Request for Tostis System! With FARTS, you 
 1. **Clone the Repository:**
     Run the following command to clone this repository to your local machine:
     ```bash
-    git clone <repository-url>
+    git clone git@github.com:Shepherd-ITSec/FARTS.git
     ```
 
 2. **Insert Your Secrets:**
