@@ -8,28 +8,36 @@ Introducing FARTS the Fast Automated Request for Tostis System! With FARTS, you 
 
 ## Usage
 1. **Clone the Repository:**
-    Run the following command to clone this repository to your local machine:
-    ```bash
-    git clone git@github.com:Shepherd-ITSec/FARTS.git
-    ```
+    - Run the following command to clone this repository to your local machine:
+        ```bash
+        git clone git@github.com:Shepherd-ITSec/FARTS.git
+        ```
+
+2. **Create a Bot account:**
+    - Go to [Oauth Credentials](https://tosti.science.ru.nl/users/account/?active=oauth_credentials) tab in your Tosti account
+    - Create a new application and add `https://localhost:5000/callback` to the Redirect uris. Please write down your Credentials safely.
 
 2. **Insert Your Secrets:**
-    Obtain your API secrets from the Tosti website and add them to the configuration file.
-    > Node: please keep the polling interval reasonably small to not stress the tosti api. 
+    - Add your API secrets from the Tosti website to the configuration file.
+    - Change the setting to your liking
+        > Node: please keep the polling interval reasonably small to not stress the tosti api. 
 
 
 3. **Rename the Configuration Template:**
-    Rename config.template to config.ini:
-    ```bash
-    mv config.template config.ini
-    ```
+    - Rename config.template to config.ini:
+        ```bash
+        mv config.template config.ini
+        ```
 
 4. **Execute the Script:**
-    Run the application using the following command:
-    ```bash
-    python tosti_farts.py
-    ```
-5. **Enjoy Your Tostis!**
-    Sit back, relax, and indulge in delicious tostis!
+    - Start the application shortly before the lunch break using the following command:
+        ```bash
+        python tosti_farts.py
+        ```
+    - Accept the certificate waring (the tosti API forces us to enter a https redirection website, so we do on the fly https)
+    - Authenticate your Bot (you may have to login first)
+
+5. **Enjoy Your Tostis!:**
+    - Sit back, relax, and indulge in delicious tostis!
 
 

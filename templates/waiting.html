@@ -70,7 +70,7 @@
 
         #timer {
             font-size: 1.5em;
-            color: #4d9de0;
+            color: #e8b365;
             margin-top: 20px;
         }
 
@@ -115,9 +115,9 @@
         }
 
         .spinner {
-            border: 8px solid #f3f3f3;
+            border: 8px solid #f3f3f384;
             border-radius: 50%;
-            border-top: 8px solid #3498db;
+            border-top: 8px solid #e8b365;
             width: 80px;
             height: 80px;
             animation: spin 2s linear infinite;
@@ -158,19 +158,19 @@
 
         function stopTimer() {
             clearInterval(timer);  // Stop the timer
+            // Hide throbber when a response is received
+            const throbber = document.getElementById('throbber');
+            throbber.classList.add('hidden');
         }
 
         function checkForAvailableTosti() {
             fetch('/check_tosti')
             .then(response => response.json())
             .then(data => {
-                const throbber = document.getElementById('throbber');
+                
                 const feedback = document.getElementById('polling-feedback');
                 const message = document.getElementById('message');
                 const title = document.getElementById('status-title');
-
-                // Hide throbber when a response is received
-                throbber.classList.add('hidden');
 
                 if (data.success) {
                     // Order placed successfully
