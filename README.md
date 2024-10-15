@@ -2,7 +2,7 @@
 
 > Made for the [TOSTI API](https://github.com/KiOui/TOSTI)
 
-![Bernd the Bread](.\static\images\Bernd_NB.png)
+![Bernd the Bread](./static/images/Bernd_NB.png)
 
 **Have you ever wanted to be the first to enjoy a delicious tosti? Are you tired of waiting?**
 
