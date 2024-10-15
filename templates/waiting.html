@@ -33,6 +33,7 @@
         #logo {
             width: 100px; /* Adjust the logo width */
             height: auto; /* Keep the aspect ratio */
+            background-color: transparent;
             /* You can set a background image here if needed */
         }
 
@@ -150,7 +151,7 @@
         let secondsWaited = 0;
 
         function startTimer() {
-            setInterval(function() {
+            var timer = setInterval(function() {
                 secondsWaited++;
                 document.getElementById('timer').innerHTML = "Time waited: " + secondsWaited + " seconds";
             }, 1000);  // Update every second
@@ -160,7 +161,7 @@
             clearInterval(timer);  // Stop the timer
             // Hide throbber when a response is received
             const throbber = document.getElementById('throbber');
-            throbber.classList.add('hidden');
+            throbber.style.display = "none";
         }
 
         function checkForAvailableTosti() {
@@ -216,7 +217,7 @@
 </head>
 <!-- Header with a centered logo -->
 <div id="header">
-    <img id="logo" src="{{ url_for('static', filename='images/farts-icon.png') }}" alt="Logo"> <!-- Replace with your logo URL -->
+    <img id="logo" src="{{ url_for('static', filename='images/Bernd_NB.png') }}" alt="Logo"> <!-- Replace with your logo URL -->
 </div>
 <body>
     <h1 id="status-title">Currently, no available tosti apparatus.</h1>
@@ -236,7 +237,7 @@
 
     <!-- Footer with the system name -->
     <footer>
-        FARTS - Fast Automated Request for Tostis System
-    </footer>
+         - Beautified Eating Retrieval Network for Desirable toasties!
+    </footer>BERND
 </body>
 </html>

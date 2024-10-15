@@ -7,19 +7,25 @@ import configparser
 from flask import Flask, redirect, request, render_template, jsonify
 
 app = Flask(__name__)
+config_file = './config.ini'
+# Check if the config file exists
+if not os.path.exists(config_file):
+    print(f"ERROR: Configuration file '{config_file}' not found. Exiting.")
+    exit(1)  # Exit the program if the file is not found
 
 # Load configuration variables from config.ini
 config = configparser.ConfigParser()
-config.read('config.ini')
+config.read(config_file)
 
-CLIENT_ID = config['SECRETS']['CLIENT_ID']
-CLIENT_SECRET = config['SECRETS']['CLIENT_SECRET']
-REDIRECT_URI = config['DEFAULT']['REDIRECT_URI']
+REDIRECT_URI = config["DEFAULT"]["REDIRECT_URI"]
 AUTHORIZATION_URL = config['DEFAULT']['AUTHORIZATION_URL']
 TOKEN_URL = config['DEFAULT']['TOKEN_URL']
 SCOPE = config['DEFAULT']['SCOPE']
-RETRY_INTERVAL = int(config['SETTING']['RETRY_INTERVAL'])  # Convert to integer
+RETRY_INTERVAL = int(config['SETTING']['RETRY_INTERVAL']) 
+CLIENT_ID = config['SECRETS']['CLIENT_ID']
+CLIENT_SECRET = config['SECRETS']['CLIENT_SECRET']
 access_token = None  # Global variable for storing access token
+
 
 def generate_code_verifier_and_challenge():
     """Generate code verifier and challenge for PKCE flow."""
