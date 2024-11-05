@@ -1,6 +1,7 @@
 import os
 import base64
 import hashlib
+import time
 import requests
 import webbrowser
 import configparser
@@ -57,16 +58,19 @@ def make_api_request():
 
             # Post an order to the shift with the least orders
             order_response_1 = post_order_to_shift(shift_id)
+            time.sleep(0.1)
             order_response_2 = post_order_to_shift(shift_id)  # Place the same order a second time
 
             # Check responses
-            if order_response_1.status_code == 201 and order_response_2.status_code == 201:
-                webbrowser.open(f"https://tosti.science.ru.nl/shifts/{shift_id}/overview/")
-                return {
+            if order_response_1.status_code == 201 or order_response_2.status_code == 201:
+                respond = {
                     'success': True,
                     'message': (f"Successfully placed orders in shift at {venue_name} "
                                 f"with {amount_of_orders} orders in front of you.")
                 }
+                print(respond)
+                webbrowser.open(f"https://tosti.science.ru.nl/shifts/{shift_id}/overview/")
+                return respond
             else:
                 return {'success': False, 'message': f"Failed to place order: {order_response_1.text} {order_response_2.text}"}
         else:

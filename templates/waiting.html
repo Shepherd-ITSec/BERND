@@ -150,9 +150,10 @@
     </style>
     <script>
         let secondsWaited = 0;
-
+        var timer = null;
+        
         function startTimer() {
-            var timer = setInterval(function() {
+            timer = setInterval(function() {
                 secondsWaited++;
                 document.getElementById('timer').innerHTML = "Time waited: " + secondsWaited + " seconds";
             }, 1000);  // Update every second
@@ -180,7 +181,9 @@
                     title.style.color = '#28a745';  // Success green
                     feedback.innerHTML = data.message;  // Show success message from backend
                     message.innerHTML = "";  // Clear previous messages
+                    document.title = "Order Placed!"; // Change page title
                     stopTimer();  // Stop the timer when order is placed successfully
+                    
                 } else if (data.message.includes('Failed to place order')) {
                     // Failed to place order
                     title.innerHTML = "Order Placement Failed!";
