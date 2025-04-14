@@ -24,11 +24,11 @@ TOKEN_URL = config['DEFAULT']['TOKEN_URL']
 SCOPE = config['DEFAULT']['SCOPE']
 RETRY_INTERVAL = int(config['SETTING']['RETRY_INTERVAL']) 
 PREFERRED_VENDOR = config['SETTING']['PREFERRED_VENDOR']
-PREFERRED_TIMEOUT = config['SETTING']['PREFERRED_TIMEOUT']
+NUM_TIMEOUT_CYCLES = int(config['SETTING']['NUM_TIMEOUT_CYCLES'])
 CLIENT_ID = config['SECRETS']['CLIENT_ID']
 CLIENT_SECRET = config['SECRETS']['CLIENT_SECRET']
 access_token = None  # Global variable for storing access token
-
+elapsed_cycles = 0
 
 def generate_code_verifier_and_challenge():
     """Generate code verifier and challenge for PKCE flow."""
@@ -50,31 +50,42 @@ def make_api_request():
 
         if count > 0:
             shifts = api_data.get('results', [])
-            # Filter for preferred vendor shifts
-            preferred_shifts = [
-                shift for shift in shifts
-                if shift.get('venue', {}).get('venue', {}).get('name') in PREFERRED_VENDOR
-            ]
+            elapsed_cycles += 1
 
             # Sort shifts by the number of orders to find the one with the least orders
+            # First, sort shifts by amount_of_orders
             shifts_sorted = sorted(shifts, key=lambda x: x['amount_of_orders'])
-            least_ordered_shift = shifts_sorted[0]
-            shift_id = least_ordered_shift['id']
-            venue_name = least_ordered_shift['venue']['venue']['name']
-            amount_of_orders = least_ordered_shift['amount_of_orders']
 
-            # Post an order to the shift with the least orders
+            if elapsed_cycles < NUM_TIMEOUT_CYCLES:
+                # Look for the first shift where venue_name matches PREFERRED_VENDOR
+                preferred_shift = next(
+                    (shift for shift in shifts_sorted if shift['venue']['venue']['name'] == PREFERRED_VENDOR),
+                    None  # Return None if no match is found
+                )
+                selected_shift = preferred_shift
+            else:
+                # Otherwise, pick the shift with the least orders
+                selected_shift = shifts_sorted[0] if shifts_sorted else None
+
+            shift_id = selected_shift['id']
+            venue_name = selected_shift['venue']['venue']['name']
+            amount_of_orders = selected_shift['amount_of_orders']
+
+             # Post an order to the shift with the least orders
             order_response_1 = post_order_to_shift(shift_id)
+            time.sleep(0.1)
             order_response_2 = post_order_to_shift(shift_id)  # Place the same order a second time
 
             # Check responses
-            if order_response_1.status_code == 201 and order_response_2.status_code == 201:
-                webbrowser.open(f"https://tosti.science.ru.nl/shifts/{shift_id}/overview/")
-                return {
+            if order_response_1.status_code == 201 or order_response_2.status_code == 201:
+                respond = {
                     'success': True,
                     'message': (f"Successfully placed orders in shift at {venue_name} "
                                 f"with {amount_of_orders} orders in front of you.")
                 }
+                print(respond)
+                webbrowser.open(f"https://tosti.science.ru.nl/shifts/{shift_id}/overview/")
+                return respond
             else:
                 return {'success': False, 'message': f"Failed to place order: {order_response_1.text} {order_response_2.text}"}
         else:
