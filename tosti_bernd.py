@@ -40,6 +40,7 @@ def make_api_request():
     """Make an authenticated request to the API and process the result."""
     API_URL = 'https://tosti.science.ru.nl/api/v1/shifts/?can_order=true'
 
+    global elapsed_cycles
     api_response = requests.get(API_URL, headers={
         'Authorization': f'Bearer {access_token}'
     })
