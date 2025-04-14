@@ -23,6 +23,8 @@ AUTHORIZATION_URL = config['DEFAULT']['AUTHORIZATION_URL']
 TOKEN_URL = config['DEFAULT']['TOKEN_URL']
 SCOPE = config['DEFAULT']['SCOPE']
 RETRY_INTERVAL = int(config['SETTING']['RETRY_INTERVAL']) 
+PREFERRED_VENDOR = config['SETTING']['PREFERRED_VENDOR']
+PREFERRED_TIMEOUT = config['SETTING']['PREFERRED_TIMEOUT']
 CLIENT_ID = config['SECRETS']['CLIENT_ID']
 CLIENT_SECRET = config['SECRETS']['CLIENT_SECRET']
 access_token = None  # Global variable for storing access token
@@ -48,6 +50,11 @@ def make_api_request():
 
         if count > 0:
             shifts = api_data.get('results', [])
+            # Filter for preferred vendor shifts
+            preferred_shifts = [
+                shift for shift in shifts
+                if shift.get('venue', {}).get('venue', {}).get('name') in PREFERRED_VENDOR
+            ]
 
             # Sort shifts by the number of orders to find the one with the least orders
             shifts_sorted = sorted(shifts, key=lambda x: x['amount_of_orders'])
@@ -58,25 +65,22 @@ def make_api_request():
 
             # Post an order to the shift with the least orders
             order_response_1 = post_order_to_shift(shift_id)
-            time.sleep(0.1)
             order_response_2 = post_order_to_shift(shift_id)  # Place the same order a second time
 
             # Check responses
-            if order_response_1.status_code == 201 or order_response_2.status_code == 201:
-                respond = {
+            if order_response_1.status_code == 201 and order_response_2.status_code == 201:
+                webbrowser.open(f"https://tosti.science.ru.nl/shifts/{shift_id}/overview/")
+                return {
                     'success': True,
                     'message': (f"Successfully placed orders in shift at {venue_name} "
                                 f"with {amount_of_orders} orders in front of you.")
                 }
-                print(respond)
-                webbrowser.open(f"https://tosti.science.ru.nl/shifts/{shift_id}/overview/")
-                return respond
             else:
                 return {'success': False, 'message': f"Failed to place order: {order_response_1.text} {order_response_2.text}"}
         else:
             return {'success': False, 'message': f"No shifts available yet: {api_response.text}"}
     else:
-        return {'success': False, 'message': f"API request failed: {api_response.text}"}
+        return {'success': False, 'message': f"API request failed: {api_response.text}"} 
 
 def post_order_to_shift(shift_id):
     """Post an order to the specified shift."""
