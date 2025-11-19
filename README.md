@@ -35,7 +35,7 @@ Introducing BERND the Beautified Eating Retrieval Network for Desirable toasties
 4. **Execute the Script:**
     - Start the application shortly before the lunch break using the following command:
         ```bash
-        python tosti_BERNT.py
+        python tosti_bernd.py
         ```
     - Accept the certificate waring (the tosti API forces us to enter a https redirection website, so we do on the fly https)
     - Authenticate your Bot (you may have to login first)

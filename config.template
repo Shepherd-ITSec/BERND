@@ -10,3 +10,5 @@ SCOPE = read write orders:order orders:manage
 
 [SETTING]
 RETRY_INTERVAL = 5
+PREFERRED_VENDOR = Zuidkantine
+NUM_TIMEOUT_CYCLES = 3
